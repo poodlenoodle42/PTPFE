@@ -8,26 +8,14 @@ void receive(const Arguments* args){
     int read = 0;
     int read_total = 0;
     int size = 0;
-    if((socket_desc = socket(AF_INET,SOCK_STREAM,0)) == -1){
-        fprintf(stderr,"Error creating socket\n");
-        exit(1);
-    }
-    if(connect(socket_desc,(struct sockaddr*)args->address_info,sizeof(*(args->address_info))) == -1){
-        fprintf(stderr,"Error connecting\n");
-        exit(1);
-    }
-    int r = recv(socket_desc,&size,4,0);
-    if(r == -1){
-        fprintf(stderr,"Error receiving size\n");
-        exit(1);
-    }
+    SOCKET_ERROR(socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
+    SOCKET_ERROR(connect(socket_desc,(struct sockaddr*)args->address_info,sizeof(*(args->address_info))),"Error connecting\n")
+    SOCKET_ERROR(recv(socket_desc,&size,4,0),"Error receiving size\n")
     size = ntohl(size);
     while(read_total < size){
-        if((read = recv(socket_desc,buffer,BUFFER_SIZE,0)) < 0){
-            fprintf(stderr,"Error receiving\n");
-            exit(1);
-        }
+        SOCKET_ERROR(read = recv(socket_desc,buffer,BUFFER_SIZE,0),"Error receiving\n")
         read_total += read;
         fwrite(buffer,1,read,args->file);
     }
+    close(socket_desc);
 }

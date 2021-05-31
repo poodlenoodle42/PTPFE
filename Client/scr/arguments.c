@@ -1,6 +1,7 @@
 #include "arguments.h"
 #include <getopt.h>    
 #include <string.h>
+#include <stdlib.h>
 void check_arg(Arguments* args);
 
 Arguments* parse_arguments(int argc, char* argv[]){
@@ -10,7 +11,8 @@ Arguments* parse_arguments(int argc, char* argv[]){
     args->address_info->sin_family = AF_INET;
     int c;
     char * file_name;
-    while ((c = getopt (argc, argv, "arspf:")) != -1){
+    opterr = 0;
+    while ((c = getopt (argc, argv, "a:rsp:f:")) != -1){
         switch (c)
         {
         case 'a':
@@ -25,7 +27,7 @@ Arguments* parse_arguments(int argc, char* argv[]){
             break;
         case 'p':
             args->port = 1;
-            args->address_info->sin_port = htonl(atoi(optarg));
+            args->address_info->sin_port = htons((short)atoi(optarg));
             break;
         case 'f':
             file_name = strdup(optarg);
@@ -43,8 +45,8 @@ Arguments* parse_arguments(int argc, char* argv[]){
         args->file = fopen(file_name,"w");
     else 
         args->file = fopen(file_name,"r");
-    free(file_name);
     check_arg(args);
+    free(file_name);
     return args;
 }
 
