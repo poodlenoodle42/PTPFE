@@ -5,7 +5,7 @@ void send_file(const Arguments* args,int socket){
     char buffer[BUFFER_SIZE];
     struct stat st;
     fstat(fileno(args->file),&st);
-    int size = (int)st.st_size;
+    int size = htonl((int)st.st_size);
     SOCKET_ERROR(send(socket,&size,4,0),"Error sending size\n")
     int bytes_read;
     while((bytes_read = fread(buffer,1,BUFFER_SIZE,args->file)) > 0){
@@ -28,7 +28,7 @@ int permission_to_send(struct sockaddr_in * addr){
 void serve(Arguments* args){
     int server_socket,client_socket;
     SOCKET_ERROR(server_socket = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
-    SOCKET_ERROR(bind(server_socket,(struct sockaddr*)args->address_info,sizeof(*args->address_info)),"Error binding socket to addr\n")
+    SOCKET_ERROR(bind(server_socket,(struct sockaddr*)&args->address_info,sizeof(args->address_info)),"Error binding socket to addr\n")
     SOCKET_ERROR(listen(server_socket,1),"Listen failed\n")
 
     //Only one connection

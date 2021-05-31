@@ -12,7 +12,7 @@ typedef struct _Arguments
     Mode mode;
     int address;
     int port;
-    struct sockaddr_in* address_info;
+    struct sockaddr_in address_info;
     FILE* file;
 } Arguments;
 
