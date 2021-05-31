@@ -4,9 +4,12 @@
 #include <string.h>
 #include <sys/socket.h> 
 #include <arpa/inet.h>
+typedef enum _Mode {
+    Send,Receive
+} Mode;
 typedef struct _Arguments
 {
-    int listen_send;
+    Mode mode;
     int address;
     int port;
     struct sockaddr_in* address_info;

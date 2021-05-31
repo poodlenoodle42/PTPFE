@@ -1,6 +1,8 @@
 #include "arguments.h"
 #include <getopt.h>    
 #include <string.h>
+void check_arg(Arguments* args);
+
 Arguments* parse_arguments(int argc, char* argv[]){
     Arguments* args = malloc(sizeof(args));
     args->address_info = malloc(sizeof(struct sockaddr_in));
@@ -8,15 +10,18 @@ Arguments* parse_arguments(int argc, char* argv[]){
     args->address_info->sin_family = AF_INET;
     int c;
     char * file_name;
-    while ((c = getopt (argc, argv, "alpf:")) != -1){
+    while ((c = getopt (argc, argv, "arspf:")) != -1){
         switch (c)
         {
         case 'a':
             args->address = 1;
-            args->address_info->sin_addr.s_addr = inet_addr(optarg);
+            args->address_info->sin_addr.s_addr = inet_addr(optarg); 
             break;
-        case 'l':
-            args->listen_send = 1;
+        case 'r':
+            args->mode = Receive;
+            break;
+        case 's':
+            args->mode = Send;
             break;
         case 'p':
             args->port = 1;
@@ -34,10 +39,33 @@ Arguments* parse_arguments(int argc, char* argv[]){
             break;
         }
     }
-    if(args->listen_send = 1)
+    if(args->mode = Receive)
         args->file = fopen(file_name,"w");
     else 
         args->file = fopen(file_name,"r");
     free(file_name);
+    check_arg(args);
     return args;
+}
+
+void check_arg(Arguments* args){
+    if(args->mode == Send && args->port == 0){
+        fprintf(stderr,"Port must be specified in send mode");
+    } else if(args->mode == Receive && (args->address == 0 || args->port == 0)){
+        fprintf(stderr,"Port and address must be specified in receive mode");
+        exit(1);
+    }
+    if(args->address_info->sin_addr.s_addr == (in_addr_t)-1 && args->address == 1){
+        fprintf(stderr,"Invalid ip address notation\n");
+        exit(1);
+    }
+    if(args->address_info->sin_port == 0 && args->port){
+        fprintf(stderr,"Invalid port notation\n");
+        exit(1);
+    }
+    if(ferror(args->file)){
+        fprintf(stderr,"Error opening file\n");
+        exit(1);
+    }
+
 }
