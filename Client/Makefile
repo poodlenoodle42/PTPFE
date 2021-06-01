@@ -9,8 +9,8 @@ DEPS := $(OBJS:.o=.d)
 
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
-
-CPPFLAGS ?= $(INC_FLAGS) -MMD -MP -std=gnu17 -g
+LDFLAGS :=  
+CPPFLAGS ?= $(INC_FLAGS) -MMD -MP -std=gnu11 -g
 CC = gcc
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)

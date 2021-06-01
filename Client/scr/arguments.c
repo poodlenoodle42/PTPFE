@@ -9,7 +9,7 @@ Arguments* parse_arguments(int argc, char* argv[]){
     memset(args,0,sizeof(Arguments));
     args->address_info.sin_family = AF_INET;
     int c;
-    char * file_name;
+    char * file_name = NULL;
     opterr = 0;
     while ((c = getopt (argc, argv, "a:rsp:f:")) != -1){
         switch (c)
@@ -42,9 +42,9 @@ Arguments* parse_arguments(int argc, char* argv[]){
             break;
         }
     }
-    if(args->mode == Receive)
+    if(args->mode == Receive && file_name != NULL)
         args->file = fopen(file_name,"w");
-    else 
+    else if(args->mode == Send && file_name != NULL)
         args->file = fopen(file_name,"r");
     check_arg(args);
     free(file_name);
@@ -66,7 +66,10 @@ void check_arg(Arguments* args){
         fprintf(stderr,"Invalid port notation\n");
         exit(1);
     }
-    if(ferror(args->file)){
+    if(args->file == NULL){
+        fprintf(stderr,"File must be specified");
+        exit(1);
+    } else if(ferror(args->file)){
         fprintf(stderr,"Error opening file\n");
         exit(1);
     }
