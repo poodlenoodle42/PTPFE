@@ -1,6 +1,7 @@
 #include "send.h"
 #include "common.h"
 #include <sys/stat.h>
+#include "connection.h"
 void send_file(const Arguments* args,int socket){
     char buffer[BUFFER_SIZE];
     struct stat st;
@@ -42,3 +43,19 @@ void send_direct(const Arguments* args){
     close(server_socket);
     close(client_socket);
 }
+
+void send_direct_punch(const Arguments* args){
+    int socket_desc;
+    SOCKET_ERROR(socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
+    
+    while(socket_desc = punch(&args->address_info,socket_desc) == -1){
+        fprintf(stderr,"Failed to establish connection, make sure other client is also punching\n");
+        int retry;
+        YES_NO_QUESTION("Retry [y|n]",retry)
+        if(retry == 0)
+            exit(0);
+    }
+    send_file(args,socket_desc);
+}
+
+void send_server(const Arguments* args){}

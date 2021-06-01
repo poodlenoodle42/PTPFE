@@ -3,6 +3,7 @@
 #define BUFFER_SIZE 0x1000
 #define PUNCHING_CONNECTION_ATTEMPTS 5
 #define PUNCHING_WAIT_PER_ATTEMPT_ms 100
+#define CONNECTION_IDENTIFIER_LENGTH 30
 #define SOCKET_ERROR(val,msg) \
 if((val) < 0){\
     fprintf(stderr,msg);\
