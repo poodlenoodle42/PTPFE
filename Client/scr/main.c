@@ -10,5 +10,4 @@ int main(int argc, char* argv[]){
         serve(args);
     }
     fclose(args->file);
-    free(args);
 }

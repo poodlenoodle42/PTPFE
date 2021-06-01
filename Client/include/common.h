@@ -7,3 +7,4 @@ if((val) < 0){\
     exit(1);\
 }
 
+void strrnd(char * str, size_t len);
