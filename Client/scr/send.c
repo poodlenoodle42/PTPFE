@@ -25,7 +25,7 @@ int permission_to_send(struct sockaddr_in * addr){
     } else 
         return permission_to_send(addr);
 } 
-void serve(Arguments* args){
+void send_direct(const Arguments* args){
     int server_socket,client_socket;
     SOCKET_ERROR(server_socket = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
     SOCKET_ERROR(bind(server_socket,(struct sockaddr*)&args->address_info,sizeof(args->address_info)),"Error binding socket to addr\n")
