@@ -26,6 +26,15 @@ if(c == 'y'){ \
     ret = 0;\
 }
 
+#ifndef NDEBUG
+#define LOG(msg,...) \
+if(args->debug){ \
+    printf(msg __VA_OPT__(,) __VA_ARGS__); \
+}
+#else
+#define LOG(msg,...)
+#endif
+
 void strrnd(char * str, size_t len);
 
 typedef struct _Connection_Info{

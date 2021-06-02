@@ -6,6 +6,7 @@ typedef enum _Mode {
 typedef struct _Arguments
 {
     uint16_t port;
+    int debug;
 } Arguments;
 
 Arguments* parse_arguments(int argc, char* argv[]);

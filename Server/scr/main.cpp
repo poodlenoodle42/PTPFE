@@ -56,6 +56,7 @@ int main(int argc, char* argv[]){
         if(client_socket_desc == -1){
             printf("Error accepting connection\n");
         } else {
+            LOG("Received connection IP: %s Port: %d\n",inet_ntoa(client_addr.sin_addr),(int)ntohs(client_addr.sin_port))
             SOCKET_ERROR_CLOSE_AND_CONTINUE(recv(client_socket_desc,&conn_mode,4,0),"Error receiving mode\n")
             conn_mode = (Mode)ntohl(conn_mode);
             if(conn_mode == Send){

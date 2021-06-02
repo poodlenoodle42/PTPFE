@@ -11,6 +11,7 @@ Arguments* parse_arguments(int argc, char* argv[]){
     int c;
     const static struct option long_options[] = {
         {"port", required_argument, 0, 'p'},
+        {"debug",no_argument,&args.debug,1},
         {0,0,0,0}
     };
     int option_index;
