@@ -1,4 +1,4 @@
-TARGET_EXEC ?= client
+TARGET_EXEC ?= server
 
 BUILD_DIR ?= ./build
 SRC_DIRS ?= ./

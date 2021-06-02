@@ -2,6 +2,7 @@
 #include <getopt.h>    
 #include <string.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
 void check_arg(Arguments* args);
 
 Arguments* parse_arguments(int argc, char* argv[]){

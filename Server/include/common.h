@@ -1,5 +1,6 @@
 #pragma once
 #include <unistd.h>
+#include <arpa/inet.h>
 #define BUFFER_SIZE 0x1000
 #define PUNCHING_CONNECTION_ATTEMPTS 5
 #define PUNCHING_WAIT_PER_ATTEMPT_ms 100
@@ -21,3 +22,8 @@ if(c == 'y'){ \
 }
 
 void strrnd(char * str, size_t len);
+
+typedef struct _Connection_Info{
+    int sender_socket_desc;
+    struct sockaddr_in sender_address_info;
+}Connection_Info;
