@@ -58,4 +58,35 @@ void send_direct_punch(const Arguments* args){
     send_file(args,socket_desc);
 }
 
-void send_server(const Arguments* args){}
+void send_server(const Arguments* args){
+    int socket_desc, peer_socket_desc;
+    int conn_mode = htonl((uint32_t)Send);
+    char conn_id[CONNECTION_IDENTIFIER_LENGTH];
+    struct sockaddr_in peer_addr;
+    SOCKET_ERROR(socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
+    SOCKET_ERROR(connect(socket_desc,(struct sockaddr*)&args->address_info,sizeof(args->address_info)),"Error connecting\n")
+
+
+    SOCKET_ERROR(send(socket_desc,&conn_mode,4,0),"Error sending connection mode\n")
+    
+    
+    SOCKET_ERROR(recv(socket_desc,conn_id,CONNECTION_IDENTIFIER_LENGTH,0),"Error receiving connection identifier\n")
+
+    printf("Your connection identifier is %s . give it to your peer to input it\n",conn_id);
+
+
+    SOCKET_ERROR(recv(socket_desc,&peer_addr,sizeof(peer_addr),0),"Error receiving peer ip info");
+
+    SOCKET_ERROR(peer_socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating peer socket\n")
+
+    if(punch(&peer_addr,socket_desc) == -1){
+        close(peer_socket_desc);
+        close(socket_desc);
+        return;
+    }
+
+    send_file(args,peer_socket_desc);
+    
+    close(peer_socket_desc);
+    close(socket_desc);
+}
