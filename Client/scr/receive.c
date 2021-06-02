@@ -42,6 +42,7 @@ void receive_server(const Arguments* args){
     int conn_mode = htonl((uint32_t)Receive);
     char* conn_id = NULL;
     struct sockaddr_in peer_addr;
+    int valid_conn_id;
     SOCKET_ERROR(socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
     SOCKET_ERROR(connect(socket_desc,(struct sockaddr*)&args->address_info,sizeof(args->address_info)),"Error connecting\n")
 
@@ -57,6 +58,14 @@ void receive_server(const Arguments* args){
     }while(1);
     SOCKET_ERROR(send(socket_desc,&conn_mode,4,0),"Error sending connection mode\n")
     SOCKET_ERROR(send(socket_desc,conn_id,CONNECTION_IDENTIFIER_LENGTH,0),"Error sending connection identifier\n")
+    
+    SOCKET_ERROR(recv(socket_desc,&valid_conn_id,4,0),"Error receiving validity of connection id")
+    valid_conn_id = ntohl(valid_conn_id);
+    if(valid_conn_id == 0){
+        close(socket_desc);
+        printf("The connection id %s is invalid\n",conn_id);
+        return;
+    }
     free(conn_id);
     SOCKET_ERROR(recv(socket_desc,&peer_addr,sizeof(peer_addr),0),"Error receiving peer ip info");
 

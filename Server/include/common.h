@@ -5,10 +5,15 @@
 #define PUNCHING_CONNECTION_ATTEMPTS 5
 #define PUNCHING_WAIT_PER_ATTEMPT_ms 100
 #define CONNECTION_IDENTIFIER_LENGTH 30
+#define MAX_CONNECTIONS 100
 #define SOCKET_ERROR(val,msg) \
 if((val) < 0){\
     fprintf(stderr,msg);\
     exit(1);\
+}
+#define SOCKET_ERROR_NO_EXIT(val,msg) \
+if((val) < 0){\
+    fprintf(stderr,msg);\
 }
 
 #define YES_NO_QUESTION(msg,ret) \
