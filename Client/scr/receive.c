@@ -11,6 +11,7 @@ void receive_file(const Arguments* args, int socket){
     SOCKET_ERROR(recv(socket,&size,4,0),"Error receiving size\n")
     size = ntohl(size);
     while(read_total < size){
+        LOG("Receiving file\n")
         SOCKET_ERROR(read = recv(socket,buffer,BUFFER_SIZE,0),"Error receiving\n")
         read_total += read;
         fwrite(buffer,1,read,args->file);
@@ -49,10 +50,13 @@ void receive_server(const Arguments* args){
     local_addr.sin_port = args->address_info.sin_port;
     SOCKET_ERROR(socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
     SOCKET_ERROR(connect(socket_desc,(struct sockaddr*)&args->address_info,sizeof(args->address_info)),"Error connecting\n")
-
+    
+    LOG("Connected to server at %s at port %d\n",inet_ntoa(args->address_info.sin_addr),(int)ntohs(args->address_info.sin_port))
+    
     do{
         printf("Input the connection id\n");
-        scanf("%ms",&conn_id);
+        scanf(" %ms",&conn_id);
+        LOG("The token is %s\n",conn_id)
         if(strlen(conn_id) != CONNECTION_IDENTIFIER_LENGTH - 1){
             printf("The given identifier does not have the right length (%d)\n", CONNECTION_IDENTIFIER_LENGTH);
             free(conn_id);
@@ -61,9 +65,11 @@ void receive_server(const Arguments* args){
             break;
     }while(1);
     SOCKET_ERROR(send(socket_desc,&conn_mode,4,0),"Error sending connection mode\n")
+    LOG("Send connection mode to server\n")
     SOCKET_ERROR(send(socket_desc,conn_id,CONNECTION_IDENTIFIER_LENGTH,0),"Error sending connection identifier\n")
-    
+    LOG("Send connection identifier to server\n")
     SOCKET_ERROR(recv(socket_desc,&valid_conn_id,4,0),"Error receiving validity of connection id")
+    LOG("Received identifier validity from server\n")
     valid_conn_id = ntohl(valid_conn_id);
     if(valid_conn_id == 0){
         close(socket_desc);
@@ -72,9 +78,11 @@ void receive_server(const Arguments* args){
     }
     free(conn_id);
     SOCKET_ERROR(recv(socket_desc,&peer_addr,sizeof(peer_addr),0),"Error receiving peer ip info");
-
+    LOG("Received peer connection info IP: %s Port: %d\n",inet_ntoa(peer_addr.sin_addr),(int)ntohs(peer_addr.sin_port))
     SOCKET_ERROR(peer_socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating peer socket\n")
-    SOCKET_ERROR(bind(peer_socket_desc,(struct sockaddr*)&local_addr,sizeof(struct sockaddr_in)),"Error binding peer socket peer socket\n")
+    SOCKET_ERROR(bind(peer_socket_desc,(struct sockaddr*)&local_addr,sizeof(struct sockaddr_in)),"Error binding peer socket\n")
+    LOG("Bound peer socket to port: %d\n",(int)ntohs(peer_addr.sin_port))
+    LOG("Try to punch tcp hole\n")
     if(punch(&peer_addr,socket_desc) == -1){
         close(peer_socket_desc);
         close(socket_desc);

@@ -9,6 +9,15 @@ if((val) < 0){\
     fprintf(stderr,msg);\
     exit(1);\
 }
+#ifndef NDEBUG
+#define LOG(msg,...) \
+if(args->debug){ \
+    printf(msg __VA_OPT__(,) __VA_ARGS__); \
+}
+#else
+#define LOG(msg,...)
+#endif
+
 
 #define YES_NO_QUESTION(msg,ret) \
 printf(msg); \

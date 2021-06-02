@@ -29,6 +29,7 @@ continue; \
 
 extern "C"{
 int main(int argc, char* argv[]){
+    srand(time(NULL));
     Arguments* args = parse_arguments(argc,argv);
     int server_socket_desc, client_socket_desc;
     struct sockaddr_in server_addr, client_addr;

@@ -21,6 +21,7 @@ Arguments* parse_arguments(int argc, char* argv[]){
         {"file", required_argument, 0,'f'},
         {"direct", no_argument, &args.direct,1},
         {"punch",no_argument,&args.punch, 1},
+        {"debug",no_argument,&args.debug,1},
         {0,0,0,0}
     };
     int option_index;

@@ -5,7 +5,7 @@ void strrnd(char * str, size_t len){
 
     if (len) {
         if (str) {            
-            for (int n = 0;n < len - 1;n++) {            
+            for (int n = 0;n < len;n++) {            
                 int key = rand() % (int)(sizeof(charset) -1);
                 str[n] = charset[key];
             }
