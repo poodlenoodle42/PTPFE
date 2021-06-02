@@ -9,7 +9,7 @@ int punch_make_connection(const struct sockaddr_in *target, int socket_desc){
         if(connect(socket_desc,(struct sockaddr*)target,sizeof(*target)) == 0){
             return 0;
         }
-        usleep(PUNCHING_WAIT_PER_ATTEMPT_ms);
+        usleep(PUNCHING_WAIT_PER_ATTEMPT_ms*1000);
     }
     return -1;
 }
@@ -21,4 +21,5 @@ int punch(const struct sockaddr_in *target, int socket_desc){
         if(retry == 0)
             return -1;
     }
+    return 0;
 }

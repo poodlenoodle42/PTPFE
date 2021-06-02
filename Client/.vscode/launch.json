@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/client",
-            "args": ["-s", "-f", "client", "-p", "16001"],
+            "args": ["-s", "-f", "client", "-p", "16001","-a","127.0.0.1"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "environment": [],

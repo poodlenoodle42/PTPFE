@@ -62,7 +62,10 @@ void send_server(const Arguments* args){
     int socket_desc, peer_socket_desc;
     int conn_mode = htonl((uint32_t)Send);
     char conn_id[CONNECTION_IDENTIFIER_LENGTH];
-    struct sockaddr_in peer_addr;
+    struct sockaddr_in peer_addr,local_addr;
+    local_addr.sin_addr.s_addr = INADDR_ANY;
+    local_addr.sin_family = AF_INET;
+    local_addr.sin_port = args->address_info.sin_port;
     SOCKET_ERROR(socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating socket\n")
     SOCKET_ERROR(connect(socket_desc,(struct sockaddr*)&args->address_info,sizeof(args->address_info)),"Error connecting\n")
 
@@ -78,7 +81,7 @@ void send_server(const Arguments* args){
     SOCKET_ERROR(recv(socket_desc,&peer_addr,sizeof(peer_addr),0),"Error receiving peer ip info");
 
     SOCKET_ERROR(peer_socket_desc = socket(AF_INET,SOCK_STREAM,0),"Error creating peer socket\n")
-
+    SOCKET_ERROR(bind(peer_socket_desc,(struct sockaddr*)&local_addr,sizeof(struct sockaddr_in)),"Error binding peer socket peer socket\n")
     if(punch(&peer_addr,socket_desc) == -1){
         close(peer_socket_desc);
         close(socket_desc);

@@ -58,7 +58,8 @@ int main(int argc, char* argv[]){
             SOCKET_ERROR_CLOSE_AND_CONTINUE(recv(client_socket_desc,&conn_mode,4,0),"Error receiving mode\n")
             conn_mode = (Mode)ntohl(conn_mode);
             if(conn_mode == Send){
-                SOCKET_ERROR_CLOSE_AND_CONTINUE(recv(client_socket_desc,conn_id,CONNECTION_IDENTIFIER_LENGTH,0),"Error receiving connection identifier\n")
+                strrnd(conn_id,CONNECTION_IDENTIFIER_LENGTH-1);
+                SOCKET_ERROR_CLOSE_AND_CONTINUE(send(client_socket_desc,conn_id,CONNECTION_IDENTIFIER_LENGTH,0),"Error sending connection identifier\n")
                 std::string conn_id_s(conn_id);
                 client_info.sender_socket_desc = client_socket_desc;
                 client_info.sender_address_info = client_addr;

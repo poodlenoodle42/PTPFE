@@ -1,7 +1,7 @@
 #include "common.h"
 #include <stdlib.h>
 void strrnd(char * str, size_t len){
-    static const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-#'?!";        
+    static const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";        
 
     if (len) {
         if (str) {            
