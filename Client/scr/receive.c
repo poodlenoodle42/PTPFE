@@ -14,6 +14,7 @@ void receive_file(const Arguments* args, int socket){
         LOG("Receiving file\n")
         SOCKET_ERROR(read = recv(socket,buffer,BUFFER_SIZE,0),"Error receiving\n")
         read_total += read;
+        LOG("Received %d MB",read_total/(1024*1024))
         fwrite(buffer,1,read,args->file);
     }
 }
