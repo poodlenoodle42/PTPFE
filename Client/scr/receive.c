@@ -10,11 +10,11 @@ void receive_file(const Arguments* args, int socket){
     int size = 0;
     SOCKET_ERROR(recv(socket,&size,4,0),"Error receiving size\n")
     size = ntohl(size);
+    LOG("Receiving file\n")
     while(read_total < size){
-        LOG("Receiving file\n")
         SOCKET_ERROR(read = recv(socket,buffer,BUFFER_SIZE,0),"Error receiving\n")
         read_total += read;
-        LOG("Received %d MB",read_total/(1024*1024))
+        LOG("Received %d MB\n",read_total/(1024*1024))
         fwrite(buffer,1,read,args->file);
     }
 }

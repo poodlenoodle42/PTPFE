@@ -9,8 +9,11 @@ void send_file(const Arguments* args,int socket){
     int size = htonl((int)st.st_size);
     SOCKET_ERROR(send(socket,&size,4,0),"Error sending size\n")
     int bytes_read;
+    int send_total = 0;
+    LOG("Sending file\n")
     while((bytes_read = fread(buffer,1,BUFFER_SIZE,args->file)) > 0){
-        LOG("Sending file\n")
+        send_total += bytes_read;
+        LOG("Send %d MB\n",send_total/(1024*1024))
         SOCKET_ERROR(send(socket,buffer,bytes_read,0),"Error sending file")
     }
 
